@@ -1,0 +1,18 @@
+/* styles/gameAnimations.css */
+@keyframes confetti {
+    0% { transform: translateY(0) rotate(0deg); }
+    100% { transform: translateY(100vh) rotate(360deg); }
+  }
+  
+  .animate-confetti {
+    animation: confetti 3s ease-in-out forwards;
+  }
+  
+  @keyframes wrongAnswer {
+    0%, 100% { background-color: transparent; }
+    50% { background-color: rgba(239, 68, 68, 0.2); }
+  }
+  
+  .wrong-answer {
+    animation: wrongAnswer 0.5s ease-in-out;
+  }
