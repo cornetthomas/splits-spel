@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
 import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogAction, AlertDialogCancel } from '@/components/ui/alert-dialog';
 
@@ -38,15 +37,19 @@ const NumberSplittingGame = () => {
 
   // Update top scores
   const updateTopScores = (newScore) => {
+    if(newScore > 0) {
     setTopScores(prevScores => {
       const newScores = [...prevScores, newScore];
       return newScores
         .sort((a, b) => b - a) // Sort in descending order
-        .slice(0, 5); // Keep only top 5
+        .slice(0, 3); // Keep only top 5
     });
+  }
   };
   const [targetNumber, setTargetNumber] = useState(null);
   const [firstNumber, setFirstNumber] = useState(null);
+  const [secondNumber, setSecondNumber] = useState(null);
+
   const [score, setScore] = useState(0);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
@@ -98,12 +101,18 @@ const NumberSplittingGame = () => {
     setShowTimeUpDialog(true);
   };
 
+  const newGame = () => {
+    setScore(0);
+    generateNewNumbers();
+  };
+
   // Genereer nieuwe getallen
   const generateNewNumbers = () => {
     const newTarget = Math.floor(Math.random() * 10) + 1;
     const newFirst = Math.floor(Math.random() * (newTarget + 1));
     setTargetNumber(newTarget);
     setFirstNumber(newFirst);
+    setSecondNumber(null);
     setShowSuccess(false);
     setShowConfetti(false);
     setTimeLeft(getTimePerQuestion());
@@ -117,7 +126,7 @@ const NumberSplittingGame = () => {
 
   const isTopScore = (score) => {
 
-    // Get the highest score in the top 5
+    // Get the highest score in the top 3
     const lowestTopScore = Math.max(...topScores);
   
     // If the new score is higher than the highest top score, it's a top score
@@ -126,6 +135,7 @@ const NumberSplittingGame = () => {
 
   // Controleer of de splitsing correct is en ga door naar volgende vraag
   const checkSplit = (selectedNumber) => {
+    setSecondNumber(selectedNumber);
     setIsTimerRunning(false);
     
     if (firstNumber + selectedNumber === targetNumber) {
@@ -227,7 +237,7 @@ const NumberSplittingGame = () => {
                 </div>
                 <span className="text-2xl">+</span>
                 <div className="w-16 h-16 flex items-center justify-center text-2xl font-bold border-2 border-gray-300 rounded">
-                  ?
+                  {secondNumber !== null ? secondNumber : '?'}
                 </div>
               </div>
             </div>
@@ -258,7 +268,7 @@ const NumberSplittingGame = () => {
         d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
       />
     </svg>
-    Top 5 Scores
+    TopScores
   </h3>
   <div className="space-y-2">
     {topScores.length > 0 ? (
@@ -297,7 +307,7 @@ const NumberSplittingGame = () => {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Stoppen</AlertDialogCancel>
-            <AlertDialogAction onClick={generateNewNumbers}>
+            <AlertDialogAction onClick={newGame}>
               Nieuw Spel
             </AlertDialogAction>
           </AlertDialogFooter>
