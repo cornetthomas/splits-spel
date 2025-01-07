@@ -297,6 +297,8 @@ const NumberSplittingGame = () => {
   </div>
 </Card>
 
+
+
       <AlertDialog open={showTimeUpDialog} onOpenChange={setShowTimeUpDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
